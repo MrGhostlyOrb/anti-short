@@ -1,5 +1,7 @@
 # Anti Short
 
+![Anti Short Button](https://github.com/mrghostlyorb/anti-short/blob/main/button.png)
+
 Anti Short is a Google Chrome extension that allows you to hide short videos from your YouTube subscription feed.
 
 ## Installation
