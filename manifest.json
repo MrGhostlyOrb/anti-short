@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "Anti Short",
+  "version": "1.0",
+  "description": "The anti short",
+  "icons": {
+    "128": "icon.png"
+  },
+  "permissions": [
+    "activeTab",
+    "https://www.youtube.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/feed/subscriptions*"],
+      "js": ["popup.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "icon.png"
+  }
+}
+
