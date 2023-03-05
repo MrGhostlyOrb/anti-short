@@ -64,6 +64,26 @@ function removeShorts() {
       }
     }
   });
+  
+  
+  
+  const menuItems = document.querySelectorAll("#items > ytd-guide-entry-renderer");
+
+  // Loop through each video item
+  menuItems.forEach((item) => {
+    // Check if the video item is a short video
+    const isShortMenu = item.querySelector("#endpoint > tp-yt-paper-item > yt-formatted-string");
+    if (isShortMenu !== null) {
+      // If it's a short video and showShorts is false, hide it from the feed
+      if (isShortMenu.innerText.toLowerCase().includes("shorts") && !showShorts) {
+        item.style.display = "none";
+      }
+      // If it's a short video and showShorts is true, show it in the feed
+      if (isShortMenu.innerText.toLowerCase().includes("shorts") && showShorts) {
+        item.style.display = "block";
+      }
+    }
+  });
 }
 
 // Add event listener to toggle button
