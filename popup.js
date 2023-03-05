@@ -7,35 +7,37 @@ document.head.appendChild(materialIconsLink);
 
 const toggleButton = document.createElement("button");
 document.body.appendChild(toggleButton);
-if (showShorts) {
-    toggleButton.style.backgroundColor = "#ff6666";
-  } else {
-    toggleButton.style.backgroundColor = "#f00";
-  }
-setInterval(() => {
+
+function createToggleButton() {
+  toggleButton.style.display = "block";
+  toggleButton.innerHTML = "<i class='material-icons' style='padding-right: 5px;'>auto_awesome</i><span style='padding-left: 5px;'>TOGGLE SHORTS</span>";
+  toggleButton.style.color = "#fff";
+  toggleButton.style.border = "none";
+  toggleButton.style.borderRadius = "10px";
+   toggleButton.style.backgroundColor = "#f00";
+  toggleButton.style.padding = "10px 16px";
+  toggleButton.style.fontWeight = "bold";
+  toggleButton.style.position = "fixed";
+  toggleButton.style.bottom = "20px";
+  toggleButton.style.right = "20px";
+  toggleButton.style.zIndex = "9999";
+  toggleButton.style.cursor = "pointer";
+  toggleButton.style.display = "flex";
+  toggleButton.style.flexDirection = "row";
+  toggleButton.style.justifyContent = "center";
+  toggleButton.style.alignItems = "center";
+  toggleButton.style.fontFamily = "Roboto, Arial, sans-serif";
+}
+
+function updateToggleButton() {
   if (window.location.href == "https://www.youtube.com/feed/subscriptions") {
-    // Create toggle button
-    toggleButton.style.display = "block";
-    toggleButton.innerHTML = "<i class='material-icons' style='padding-right: 5px;'>auto_awesome</i><span style='padding-left: 5px;'>TOGGLE SHORTS</span>";
-    toggleButton.style.color = "#fff";
-    toggleButton.style.border = "none";
-    toggleButton.style.borderRadius = "10px";
-    toggleButton.style.padding = "10px 16px";
-    toggleButton.style.fontWeight = "bold";
-    toggleButton.style.position = "fixed";
-    toggleButton.style.bottom = "20px";
-    toggleButton.style.right = "20px";
-    toggleButton.style.zIndex = "9999";
-    toggleButton.style.cursor = "pointer";
-    toggleButton.style.display = "flex";
-    toggleButton.style.flexDirection = "row";
-    toggleButton.style.justifyContent = "center";
-    toggleButton.style.alignItems = "center";
-    toggleButton.style.fontFamily = "Roboto, Arial, sans-serif";
+    createToggleButton();
   } else {
     toggleButton.style.display = "none";
   }
-}, 1000);
+}
+
+updateToggleButton();
 
 // Toggle function
 function toggleShorts() {
@@ -73,6 +75,9 @@ window.addEventListener("scroll", () => {
     removeShorts();
   }
 });
+
+// Listen for URL changes and update the toggle button
+window.addEventListener("yt-page-data-updated", updateToggleButton);
 
 setTimeout(() => {
   removeShorts();
