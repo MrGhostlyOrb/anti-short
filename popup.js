@@ -30,7 +30,7 @@ function createToggleButton() {
 }
 
 function updateToggleButton() {
-  if (window.location.href == "https://www.youtube.com/feed/subscriptions" || window.location.href == "https://www.youtube.com") {
+  if (window.location.href === "https://www.youtube.com/feed/subscriptions" || window.location.href === "https://www.youtube.com") {
     createToggleButton();
     if (!showShorts) {
       removeShorts();
