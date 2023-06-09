@@ -32,6 +32,9 @@ function createToggleButton() {
 function updateToggleButton() {
   if (window.location.href == "https://www.youtube.com/feed/subscriptions" || window.location.href == "https://www.youtube.com") {
     createToggleButton();
+    if (!showShorts) {
+      removeShorts();
+    }
   } else {
     toggleButton.style.display = "none";
   }
@@ -53,6 +56,23 @@ function removeShorts() {
   videoItems.forEach((item) => {
     // Check if the video item is a short video
     const isShortVideo = item.querySelector("span.ytd-thumbnail-overlay-time-status-renderer");
+    if (isShortVideo !== null) {
+      // If it's a short video and showShorts is false, hide it from the feed
+      if (isShortVideo.innerText.toLowerCase().includes("shorts") && !showShorts) {
+        item.style.display = "none";
+      }
+      // If it's a short video and showShorts is true, show it in the feed
+      if (isShortVideo.innerText.toLowerCase().includes("shorts") && showShorts) {
+        item.style.display = "block";
+      }
+    }
+  });
+
+  // Another seletor for different youtube design
+  const videoItems2 = document.querySelectorAll("#contents > ytd-rich-item-renderer");
+  videoItems2.forEach((item) => {
+    // Check if the video item is a short video
+    const isShortVideo = item.querySelector("span#text");
     if (isShortVideo !== null) {
       // If it's a short video and showShorts is false, hide it from the feed
       if (isShortVideo.innerText.toLowerCase().includes("shorts") && !showShorts) {
@@ -88,6 +108,12 @@ window.addEventListener("scroll", () => {
     removeShorts();
   }
 });
+
+window.addEventListener("DOMContentLoaded", ()=>{
+	if (!showShorts) {
+      removeShorts();
+    }
+})
 
 // Listen for URL changes and update the toggle button
 window.addEventListener("yt-page-data-updated", updateToggleButton);
