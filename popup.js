@@ -1,13 +1,3 @@
-let showShorts = false;
-
-const materialIconsLink = document.createElement("link");
-materialIconsLink.rel = "stylesheet";
-materialIconsLink.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
-document.head.appendChild(materialIconsLink);
-
-const toggleButton = document.createElement("button");
-document.body.appendChild(toggleButton);
-
 function createToggleButton() {
     toggleButton.style.display = "block";
     toggleButton.innerHTML = "<i class='material-icons' style='padding-right: 5px;'>auto_awesome</i><span style='padding-left: 5px;'>TOGGLE SHORTS</span>";
@@ -40,67 +30,51 @@ function updateToggleButton() {
     }
 }
 
-updateToggleButton();
-
 // Toggle function
 function toggleShorts() {
     showShorts = !showShorts;
     removeShorts();
 }
 
+function filterVideos(selector, callback) {
+    const items = document.querySelectorAll(selector);
+    items.forEach((item) => {
+        const isShortVideo = item.querySelector(callback.selector);
+        if (isShortVideo !== null) {
+            if (isShortVideo.innerText.toLowerCase().includes("shorts") && !showShorts) {
+                item.style.display = "none";
+                //removeShorts();
+            } else if (isShortVideo.innerText.toLowerCase().includes("shorts") && showShorts) {
+                item.style.display = "block";
+            }
+        }
+    });
+}
+
 function removeShorts() {
-    // Get all the video items
-    const videoItems = document.querySelectorAll("#items > ytd-grid-video-renderer");
+    // Remove all the short items
+    filterVideos("#items > ytd-grid-video-renderer", {selector: "span.ytd-thumbnail-overlay-time-status-renderer"});
+    filterVideos("#contents > ytd-rich-item-renderer", {selector: "span#text"});
+    filterVideos("#contents > ytd-item-section-renderer", {selector: "span#text"});
+    filterVideos("ytd-rich-section-renderer", {selector: "span#text"});
 
-    // Loop through each video item
-    videoItems.forEach((item) => {
-        // Check if the video item is a short video
-        const isShortVideo = item.querySelector("span.ytd-thumbnail-overlay-time-status-renderer");
-        if (isShortVideo !== null) {
-            // If it's a short video and showShorts is false, hide it from the feed
-            if (isShortVideo.innerText.toLowerCase().includes("shorts") && !showShorts) {
-                item.style.display = "none";
-            }
-            // If it's a short video and showShorts is true, show it in the feed
-            if (isShortVideo.innerText.toLowerCase().includes("shorts") && showShorts) {
-                item.style.display = "block";
-            }
+    const shortsSections = document.querySelectorAll("ytd-rich-section-renderer")
+    shortsSections.forEach((section) => {
+        if (section.innerText.toLowerCase().includes("shorts") && !showShorts) {
+            section.style.display = "none"
+        } else if (section.innerText.toLowerCase().includes("shorts") && showShorts) {
+            section.style.display = "block";
         }
-    });
+    })
 
-    // Another seletor for different youtube design
-    const videoItems2 = document.querySelectorAll("#contents > ytd-rich-item-renderer");
-    videoItems2.forEach((item) => {
-        // Check if the video item is a short video
-        const isShortVideo = item.querySelector("span#text");
-        if (isShortVideo !== null) {
-            // If it's a short video and showShorts is false, hide it from the feed
-            if (isShortVideo.innerText.toLowerCase().includes("shorts") && !showShorts) {
-                item.style.display = "none";
-            }
-            // If it's a short video and showShorts is true, show it in the feed
-            if (isShortVideo.innerText.toLowerCase().includes("shorts") && showShorts) {
-                item.style.display = "block";
-            }
+    const shortsSectionsMobile = document.querySelectorAll("ytm-item-section-renderer")
+    shortsSectionsMobile.forEach((section) => {
+        if (section.innerText.toLowerCase().includes("shorts") && !showShorts) {
+            section.style.display = "none"
+        } else if (section.innerText.toLowerCase().includes("shorts") && showShorts) {
+            section.style.display = "block";
         }
-    });
-
-    // Another seletor for different youtube design
-    const listVideoItems = document.querySelectorAll("#contents > ytd-item-section-renderer");
-    listVideoItems.forEach((item) => {
-        // Check if the video item is a short video
-        const isShortVideo = item.querySelector("span#text");
-        if (isShortVideo !== null) {
-            // If it's a short video and showShorts is false, hide it from the feed
-            if (isShortVideo.innerText.toLowerCase().includes("shorts") && !showShorts) {
-                item.style.display = "none";
-            }
-            // If it's a short video and showShorts is true, show it in the feed
-            if (isShortVideo.innerText.toLowerCase().includes("shorts") && showShorts) {
-                item.style.display = "block";
-            }
-        }
-    });
+    })
 
     const menuItems = document.querySelectorAll("#items > ytd-guide-entry-renderer");
     menuItems.forEach((item) => {
@@ -108,6 +82,8 @@ function removeShorts() {
         if (isShortMenu !== null) {
             if (isShortMenu.innerText.toLowerCase().includes("shorts") && !showShorts) {
                 item.style.display = "none";
+                // Call again to check for further videos on the page
+                //removeShorts();
             }
             if (isShortMenu.innerText.toLowerCase().includes("shorts") && showShorts) {
                 item.style.display = "block";
@@ -115,9 +91,6 @@ function removeShorts() {
         }
     });
 }
-
-// Add event listener to toggle button
-toggleButton.addEventListener("click", toggleShorts);
 
 // Listen for scroll events and remove short videos if toggle is selected
 window.addEventListener("scroll", () => {
@@ -135,8 +108,39 @@ window.addEventListener("DOMContentLoaded", () => {
 // Listen for URL changes and update the toggle button
 window.addEventListener("yt-page-data-updated", updateToggleButton);
 
+
+let showShorts = false;
+
+const materialIconsLink = document.createElement("link");
+materialIconsLink.rel = "stylesheet";
+materialIconsLink.href = "https://fonts.googleapis.com/icon?family=Material+Icons";
+document.head.appendChild(materialIconsLink);
+
+const toggleButton = document.createElement("button");
+document.body.appendChild(toggleButton);
+
+// Add event listener to toggle button
+toggleButton.addEventListener("click", toggleShorts);
+
+updateToggleButton();
+
 setTimeout(() => {
     updateToggleButton();
     removeShorts();
 }, 1000);
+
+function initObserver() {
+    const observer = new MutationObserver((mutations) => {
+        removeShorts();
+    });
+
+    const targetNode = document.querySelector("#content");
+    if (targetNode) {
+        const config = {childList: true, subtree: true};
+        observer.observe(targetNode, config);
+    }
+}
+
+initObserver();
+
 

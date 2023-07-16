@@ -1,23 +1,29 @@
 {
-  "manifest_version": 2,
-  "name": "Anti Short",
-  "version": "1.0",
-  "description": "The anti short",
-  "icons": {
-    "128": "icon.png"
-  },
-  "permissions": [
-    "activeTab",
-    "https://www.youtube.com/*"
-  ],
-  "content_scripts": [
-    {
-      "matches": ["https://www.youtube.com/*"],
-      "js": ["popup.js"]
+    "manifest_version": 3,
+    "name": "Anti Short",
+    "version": "1.0",
+    "description": "The anti short",
+    "icons": {
+        "128": "icon.png"
+    },
+    "host_permissions": [
+        "https://www.youtube.com/*"
+    ],
+    "permissions": [
+        "activeTab"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.youtube.com/*"
+            ],
+            "js": [
+                "popup.js"
+            ]
+        }
+    ],
+    "action": {
+        "default_icon": "icon.png"
     }
-  ],
-  "browser_action": {
-    "default_icon": "icon.png"
-  }
 }
 
